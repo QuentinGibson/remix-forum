@@ -1,12 +1,12 @@
-import { Link, useLoaderData } from "@remix-run/react";
+import { Link, useFetcher, useLoaderData } from "@remix-run/react";
 import type { LoaderArgs } from "@remix-run/server-runtime";
-import { BsHeart, BsHeartFill } from 'react-icons/bs'
+import { BsHeart, BsHeartFill, BsSearch, BsX } from 'react-icons/bs'
 
 export const loader = async ({ request }: LoaderArgs) => {
-  return (
-    {
-      categories:
-        [{
+  const url = new URL(request.url)
+  const search = new URLSearchParams(url.search);
+  const searchParam = search.get("search") ?? ""
+  const categories = [{
           title: "politics",
           threadCount: 1321,
           description: "Lets discuss about whats happening around the world politics.",
@@ -18,7 +18,15 @@ export const loader = async ({ request }: LoaderArgs) => {
           description: "Learn about learing with these prompts",
           id: 1,
           isFavorite: true
-        }]
+    }]
+  const filteredCategories = categories.filter(category => {
+    console.log(`Did I filter ${category.title}: ${category.title.includes(searchParam)}`)
+    return category.title.includes(searchParam)
+  })
+  return (
+    {
+      categories: filteredCategories
+        
     })
 }
 
@@ -57,31 +65,28 @@ function CategoryElement({ category: { title, threadCount, description, id, isFa
 
 export default function Categories() {
   const { categories } = useLoaderData()
+  const search = useFetcher();
   return (
     <main id="tt-pageContent">
       <div className="tt-custom-mobile-indent container">
         <div className="tt-categories-title">
           <div className="tt-title">Categories</div>
           <div className="tt-search">
-            <form className="search-wrapper">
+            <search.Form className="search-wrapper">
               <div className="search-form">
                 <input
                   type="text"
+                  name="search"
                   className="tt-search__input"
                   placeholder="Search Categories"
                 />
-                <button className="tt-search__btn" type="submit">
+                <button style={{height: "100%"}} className="tt-search__btn" type="submit">
                   <svg className="tt-icon">
-                    <use xlinkHref="#icon-search" />
-                  </svg>
-                </button>
-                <button className="tt-search__close">
-                  <svg className="tt-icon">
-                    <use xlinkHref="#icon-cancel" />
+                    <BsSearch/>
                   </svg>
                 </button>
               </div>
-            </form>
+            </search.Form>
           </div>
         </div>
         <div className="tt-categories-list">
