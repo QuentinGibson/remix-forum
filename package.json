@@ -31,6 +31,7 @@
   "dependencies": {
     "@babel/runtime": "^7.21.0",
     "@headlessui/react": "^1.7.13",
+    "@markdoc/markdoc": "^0.2.2",
     "@popperjs/core": "^2.11.6",
     "@prisma/client": "^4.11.0",
     "@remix-run/node": "*",

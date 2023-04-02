@@ -1,19 +1,26 @@
-import { json, LoaderArgs } from "@remix-run/node"
-import { Link, NavLink, useFetcher, useLoaderData } from "@remix-run/react"
+import type { LoaderArgs, DataFunctionArgs } from "@remix-run/node";
+import { json } from "@remix-run/node"
+import { Link, NavLink, useFetcher, useLoaderData, useParams, useSearchParams } from "@remix-run/react"
 import Avatar from "react-avatar"
-import { BsBookmark, BsBookmarkFill, BsClock, BsEyeFill, BsFlagFill, BsHandThumbsDown, BsHandThumbsDownFill, BsHandThumbsUp, BsHandThumbsUpFill, BsReply, BsReplyFill, BsSearch, BsSearch, BsShareFill } from "react-icons/bs"
+import { BsBookmark, BsBookmarkFill, BsClock, BsEyeFill, BsFlagFill, BsHandThumbsDown, BsHandThumbsDownFill, BsHandThumbsUp, BsHandThumbsUpFill, BsReply, BsReplyFill, BsSearch, BsSearch, BsShareFill, BsX } from "react-icons/bs"
+import { Markdown } from "~/components/markdown";
+import {markdown} from "~/markdown.server"
+
 
 export const loader = async ({ request }: LoaderArgs) => {
+  const url = new URL(request.url)
+  const search = new URLSearchParams(url.search);
+  const searchParam = search.get("search") ?? ""
   const thread = {
     title: "Web Hosting Packages for ThemeForest WordPress",
-    content: `# Get ready for Movember!
+    content: markdown(`# Get ready for Movember!
 It’s time to channel your inner Magnum P.I., Ron Swanson or Hercule Poroit! It’s the time that all guys (or gals) love and all our partners hate It’s Movember!
 
 Throughout November we will be inviting all community members to help raise awareness and funds for the lives of men affected by cancer and mental health problems via the Movember Foundation 10.
 
 # How Does it Work?
 Authors and customers with facial hair unite! Simply grow, groom, and share your facial hair during November! Even females can enter if they desire (be creative, ladies!). Be inspired by checking out last year’s highlights 28
-      `,
+      `),
     user: {
       id: "30jq9f09eq4jfei",
       name: "dylan89"
@@ -40,8 +47,8 @@ Authors and customers with facial hair unite! Simply grow, groom, and share your
     shares: 32,
     posts: [
       {
-        content: `Finally!
-Are there any special recommendations for design or an updated guide that includes new preview sizes, including retina displays?`,
+        content: markdown(`Finally!
+Are there any special recommendations for design or an updated guide that includes new preview sizes, including retina displays?`),
         user: {
           name: "telsa02",
           id: "03j2qj9qf9034j"
@@ -55,12 +62,61 @@ Are there any special recommendations for design or an updated guide that includ
   }
 
   const relatedTopics = [{
-
+      id: "0293j4jf43",
+    title: "Does Envato act against the authors of Envato markets?",
+    category: { color: "orange", name: "category" },
+    user: {
+      id: "0293j4jf43",
+      name: "Fyer"
+    },
+    likes: 358,
+    replies: 68,
+    views: 8301,
+    activity: "1d"
+  },
+  {
+      id: "0293j4jf43",
+    title: "We Want to Hear From You! What Would You Like?",
+    category: { color: "gray", name: "movies" },
+    user: {
+      id: "0293j4jf43",
+      name: "Fyer"
+    },
+    likes: 358,
+    replies: 68,
+    views: 8301,
+    activity: "1d"
+  }, {
+      id: "0293j4jf43",
+    title: "Seeking partner backend developer",
+    category: { color: "orange", name: "movies" },
+    user: {
+      id: "0293j4jf43",
+      name: "Fyer"
+    },
+    likes: 358,
+    replies: 68,
+    views: 3331,
+    activity: "1d"
+  }, {
+      id: "0293j4jf43",
+    title: "Cannot customize my intro",
+    category: { color: "blue", name: "video games" },
+    user: {
+      id: "0293j4jf43",
+      name: "Fyer"
+    },
+    likes: 858,
+    replies: 20,
+    views: 3301,
+    activity: "2d"
   }]
 
-  return json({ thread })
-
+  const filteredRelatedTopics = relatedTopics.filter(topic => topic.title.includes(searchParam))
+  console.log(filteredRelatedTopics)
+  return json({ thread, related: filteredRelatedTopics })
 }
+
 function ThreadHeaderElment({ thread }) {
   return (
     <div className="tt-item">
@@ -105,7 +161,7 @@ function ThreadHeaderElment({ thread }) {
             </ul>
           </div>
         </div>
-        <div className="tt-item-description">{thread.content}</div>
+        <div className="tt-item-description"><Markdown content={thread.content}/></div>
         <div className="tt-item-info info-bottom">
           <button style={{ display: "flex", flexDirection: "column" }} className="tt-icon-btn">
             <i className="tt-icon">
@@ -177,7 +233,7 @@ function ThreadBodyElement({ thread }) {
             </span>
           </div>
         </div>
-        <div className="tt-item-description">{thread.content}</div>
+        <div className="tt-item-description"><Markdown content={thread.content} /></div>
         <div className="tt-item-info info-bottom">
           <button style={{ display: "flex", flexDirection: "column" }} className="tt-icon-btn">
             <i className="tt-icon">
@@ -213,6 +269,46 @@ function ThreadBodyElement({ thread }) {
   )
 }
 
+function RelatedThread({thread}) {
+  const color = thread.category.color
+  const colorKey = {
+    orange: "tt-color05",
+    blue: "tt-color03",
+    gray: "tt-color04",
+  }
+  return (
+    <div className="tt-item">
+      <div className="tt-col-avatar">
+          <Avatar size="40" round name={thread.user.name} maxInitials={1} />
+      </div>
+      <div className="tt-col-description">
+        <h6 className="tt-title">
+          <Link to={`/thread/${thread.id}`}>{thread.title}</Link>
+        </h6>
+        <div className="row align-items-center no-gutters hide-desktope">
+          <div className="col-11">
+            <ul className="tt-list-badge">
+              <li className="show-mobile">
+                <span className={`tt-color-04 tt-badge`}>{thread.category.name}</span>
+              </li>
+            </ul>
+          </div>
+          <div className="col-1 ml-auto show-mobile">
+            <div className="tt-value">{thread.activity}</div>
+          </div>
+        </div>
+      </div>
+      <div className="tt-col-category">
+        <span className={`${colorKey[color]} tt-badge`}>{thread.category.name}</span>
+      </div>
+      <div className="tt-col-value hide-mobile">{thread.likes}</div>
+      <div className="tt-col-value tt-color-select hide-mobile">{thread.replies}</div>
+      <div className="tt-col-value hide-mobile">{thread.views}</div>
+      <div className="tt-col-value hide-mobile">{thread.activity}</div>
+    </div>
+  )
+}
+
 function newUserPopup() {
   return (
     <div className="tt-item tt-item-popup">
@@ -242,9 +338,20 @@ function newUserPopup() {
 }
 
 export default function SingleTreadRoute() {
-  const { thread } = useLoaderData<typeof loader>()
+  const { thread, related } = useLoaderData<typeof loader>()
   const users = [...thread.posts.map(post => post.user), thread.user]
   const postFetcher = useFetcher()
+  const searchFetcher = useFetcher()
+  const [params, setParams] = useSearchParams()
+  const repliesParam = params.get("replies")
+  const searchParam = params.get("search") || ""
+
+  let optimisticRelated = [...related]
+
+  if (searchFetcher.state === "loading") {
+    optimisticRelated = optimisticRelated.filter((relatedThread) => relatedThread.title.toLowerCase().includes(searchParam))
+  }
+  const RelatedElements = optimisticRelated.map((relatedThread, key) => <RelatedThread thread={relatedThread} key={key} />)
   return (
     <main id="tt-pageContent">
       <div className="container">
@@ -316,29 +423,29 @@ export default function SingleTreadRoute() {
                 <h6 className="tt-title">Sort replies by:</h6>
                 <ul className="tt-list-badge tt-size-lg">
                   <li>
-                    <NavLink to={`?replies=recent`} end>
-                      <span className="tt-badge">Recent</span>
-                    </NavLink>
+                    <Link preventScrollReset to={{search: "?replies=recent"}}>
+                      <span className={`${repliesParam === "recent" ? "tt-color02" : ""} tt-badge`}>Recent</span>
+                    </Link>
                   </li>
                   <li>
-                    <NavLink to={`?replies=mostliked`} end>
-                      <span className="tt-color02 tt-badge">Most Liked</span>
-                    </NavLink>
+                    <Link to={`?replies=mostliked`} preventScrollReset>
+                      <span className={`${repliesParam === "mostliked" ? "tt-color02" : ""} tt-badge`}>Most Liked</span>
+                    </Link>
                   </li>
                   <li>
-                    <NavLink to={`?replies=longest`} end>
-                      <span className="tt-badge">Longest</span>
-                    </NavLink>
+                    <Link to={`?replies=longest`} preventScrollReset>
+                      <span className={`${repliesParam === "longest" ? "tt-color02" : ""} tt-badge`}>Longest</span>
+                    </Link>
                   </li>
                   <li>
-                    <NavLink to={`?replies=shortest`} end>
-                      <span className="tt-badge">Shortest</span>
-                    </NavLink>
+                    <Link to={`?replies=shortest`} preventScrollReset>
+                      <span className={`${repliesParam === "shortest" ? "tt-color02" : ""} tt-badge`}>Shortest</span>
+                    </Link>
                   </li>
                   <li>
-                    <NavLink to={`?replies=acceptedanswers`} end>
-                      <span className="tt-badge">Accepted Answers</span>
-                    </NavLink>
+                    <Link to={`?replies=acceptedanswers`} preventScrollReset>
+                      <span className={`${repliesParam === "acceptedanswers" ? "tt-color02" : ""} tt-badge`}>Accepted Answers</span>
+                    </Link>
                   </li>
                 </ul>
               </div>
@@ -504,23 +611,19 @@ export default function SingleTreadRoute() {
             <div className="tt-title">Suggested Topics</div>
             {/* tt-search */}
             <div className="tt-search">
-              <form className="search-wrapper">
+              <searchFetcher.Form className="search-wrapper">
                 <div className="search-form">
                   <input
                     type="text"
                     className="tt-search__input"
+                    name="search"
                     placeholder="Search for topics"
                   />
-                  <button style={{height: "100%"}} className="tt-search__btn" type="submit">
+                  <button style={{ height: "100%" }} className="tt-search__btn" type="submit">
                     <BsSearch />
                   </button>
-                  <button className="tt-search__close">
-                    <svg className="tt-icon">
-                      <use xlinkHref="#icon-cancel" />
-                    </svg>
-                  </button>
                 </div>
-              </form>
+              </searchFetcher.Form>
             </div>
             {/* /tt-search */}
           </div>
@@ -532,203 +635,8 @@ export default function SingleTreadRoute() {
             <div className="tt-col-value hide-mobile">Views</div>
             <div className="tt-col-value">Activity</div>
           </div>
-          <div className="tt-item">
-            <div className="tt-col-avatar">
-              <svg className="tt-icon">
-                <use xlinkHref="#icon-ava-n" />
-              </svg>
-            </div>
-            <div className="tt-col-description">
-              <h6 className="tt-title">
-                <a href="#">
-                  Does Envato act against the authors of Envato markets?
-                </a>
-              </h6>
-              <div className="row align-items-center no-gutters hide-desktope">
-                <div className="col-11">
-                  <ul className="tt-list-badge">
-                    <li className="show-mobile">
-                      <a href="#">
-                        <span className="tt-color05 tt-badge">music</span>
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-                <div className="col-1 ml-auto show-mobile">
-                  <div className="tt-value">1d</div>
-                </div>
-              </div>
-            </div>
-            <div className="tt-col-category">
-              <span className="tt-color05 tt-badge">music</span>
-            </div>
-            <div className="tt-col-value hide-mobile">358</div>
-            <div className="tt-col-value tt-color-select hide-mobile">68</div>
-            <div className="tt-col-value hide-mobile">8.3k</div>
-            <div className="tt-col-value hide-mobile">1d</div>
-          </div>
-          <div className="tt-item">
-            <div className="tt-col-avatar">
-              <svg className="tt-icon">
-                <use xlinkHref="#icon-ava-h" />
-              </svg>
-            </div>
-            <div className="tt-col-description">
-              <h6 className="tt-title">
-                <a href="#">
-                  <svg className="tt-icon">
-                    <use xlinkHref="#icon-locked" />
-                  </svg>
-                  We Want to Hear From You! What Would You Like?
-                </a>
-              </h6>
-              <div className="row align-items-center no-gutters hide-desktope">
-                <div className="col-11">
-                  <ul className="tt-list-badge">
-                    <li className="show-mobile">
-                      <a href="#">
-                        <span className="tt-color06 tt-badge">movies</span>
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-                <div className="col-1 ml-auto show-mobile">
-                  <div className="tt-value">2d</div>
-                </div>
-              </div>
-            </div>
-            <div className="tt-col-category">
-              <span className="tt-color06 tt-badge">movies</span>
-            </div>
-            <div className="tt-col-value hide-mobile">674</div>
-            <div className="tt-col-value tt-color-select  hide-mobile">29</div>
-            <div className="tt-col-value hide-mobile">1.3k</div>
-            <div className="tt-col-value hide-mobile">2d</div>
-          </div>
-          <div className="tt-item">
-            <div className="tt-col-avatar">
-              <svg className="tt-icon">
-                <use xlinkHref="#icon-ava-j" />
-              </svg>
-            </div>
-            <div className="tt-col-description">
-              <h6 className="tt-title">
-                <a href="#">Seeking partner backend developer</a>
-              </h6>
-              <div className="row align-items-center no-gutters">
-                <div className="col-11">
-                  <ul className="tt-list-badge">
-                    <li className="show-mobile">
-                      <a href="#">
-                        <span className="tt-color03 tt-badge">exchange</span>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#">
-                        <span className="tt-badge">themeforest</span>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#">
-                        <span className="tt-badge">elements</span>
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-                <div className="col-1 ml-auto show-mobile">
-                  <div className="tt-value">2d</div>
-                </div>
-              </div>
-            </div>
-            <div className="tt-col-category">
-              <span className="tt-color13 tt-badge">movies</span>
-            </div>
-            <div className="tt-col-value hide-mobile">278</div>
-            <div className="tt-col-value tt-color-select  hide-mobile">27</div>
-            <div className="tt-col-value hide-mobile">1.4k</div>
-            <div className="tt-col-value hide-mobile">2d</div>
-          </div>
-          <div className="tt-item">
-            <div className="tt-col-avatar">
-              <svg className="tt-icon">
-                <use xlinkHref="#icon-ava-t" />
-              </svg>
-            </div>
-            <div className="tt-col-description">
-              <h6 className="tt-title">
-                <a href="#">Cannot customize my intro</a>
-              </h6>
-              <div className="row align-items-center no-gutters">
-                <div className="col-11">
-                  <ul className="tt-list-badge">
-                    <li className="show-mobile">
-                      <a href="#">
-                        <span className="tt-color07 tt-badge">video games</span>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#">
-                        <span className="tt-badge">videohive</span>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#">
-                        <span className="tt-badge">photodune</span>
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-                <div className="col-1 ml-auto show-mobile">
-                  <div className="tt-value">2d</div>
-                </div>
-              </div>
-            </div>
-            <div className="tt-col-category">
-              <span className="tt-color07 tt-badge">video games</span>
-            </div>
-            <div className="tt-col-value hide-mobile">364</div>
-            <div className="tt-col-value tt-color-select  hide-mobile">36</div>
-            <div className="tt-col-value  hide-mobile">982</div>
-            <div className="tt-col-value hide-mobile">2d</div>
-          </div>
-          <div className="tt-item">
-            <div className="tt-col-avatar">
-              <svg className="tt-icon">
-                <use xlinkHref="#icon-ava-k" />
-              </svg>
-            </div>
-            <div className="tt-col-description">
-              <h6 className="tt-title">
-                <a href="#">
-                  <svg className="tt-icon">
-                    <use xlinkHref="#icon-verified" />
-                  </svg>
-                  Microsoft Word and Power Point
-                </a>
-              </h6>
-              <div className="row align-items-center no-gutters hide-desktope">
-                <div className="col-11">
-                  <ul className="tt-list-badge">
-                    <li className="show-mobile">
-                      <a href="#">
-                        <span className="tt-color08 tt-badge">youtube</span>
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-                <div className="col-1 ml-auto show-mobile">
-                  <div className="tt-value">3d</div>
-                </div>
-              </div>
-            </div>
-            <div className="tt-col-category">
-              <span className="tt-color08 tt-badge">youtube</span>
-            </div>
-            <div className="tt-col-value  hide-mobile">698</div>
-            <div className="tt-col-value tt-color-select  hide-mobile">78</div>
-            <div className="tt-col-value  hide-mobile">2.1k</div>
-            <div className="tt-col-value hide-mobile">3d</div>
-          </div>
+
+          {RelatedElements}
           <div className="tt-row-btn">
             <button type="button" className="btn-icon js-topiclist-showmore">
               <svg className="tt-icon">
@@ -743,4 +651,8 @@ export default function SingleTreadRoute() {
 
 
   )
+}
+
+export const action = async ({request}: DataActionArgs) => {
+  
 }
