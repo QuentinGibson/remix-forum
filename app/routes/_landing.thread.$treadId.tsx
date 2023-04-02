@@ -1,5 +1,5 @@
 import { json, LoaderArgs } from "@remix-run/node"
-import { Link, NavLink, useLoaderData } from "@remix-run/react"
+import { Link, NavLink, useFetcher, useLoaderData } from "@remix-run/react"
 import Avatar from "react-avatar"
 import { BsBookmark, BsBookmarkFill, BsClock, BsEyeFill, BsFlagFill, BsHandThumbsDown, BsHandThumbsDownFill, BsHandThumbsUp, BsHandThumbsUpFill, BsReply, BsReplyFill, BsSearch, BsSearch, BsShareFill } from "react-icons/bs"
 
@@ -73,7 +73,7 @@ function ThreadHeaderElment({ thread }) {
               </i>
             </div>
             <div className="tt-avatar-title">
-              <Link to={`/users/${thread.user.id}`}>{thread.user.name}</Link>
+              <Link to={`/user/${thread.user.id}`}>{thread.user.name}</Link>
             </div>
             <span style={{ display: "flex", alignItems: "center" }} className="tt-info-time">
               <i className="tt-icon">
@@ -167,7 +167,7 @@ function ThreadBodyElement({ thread }) {
               </i>
             </div>
             <div className="tt-avatar-title">
-              <Link to={`/users/${thread.user.id}`}>{thread.user.name}</Link>
+              <Link to={`/user/${thread.user.id}`}>{thread.user.name}</Link>
             </div>
             <span style={{ display: "flex", alignItems: "center" }} className="tt-info-time">
               <i className="tt-icon">
@@ -244,6 +244,7 @@ function newUserPopup() {
 export default function SingleTreadRoute() {
   const { thread } = useLoaderData<typeof loader>()
   const users = [...thread.posts.map(post => post.user), thread.user]
+  const postFetcher = useFetcher()
   return (
     <main id="tt-pageContent">
       <div className="container">
@@ -303,7 +304,7 @@ export default function SingleTreadRoute() {
                 {users.map((user, key) => {
                   return (
                     <div key={key} className="tt-item">
-                      <Link to={`/users/${user.id}`} className=" tt-icon-avatar">
+                      <Link to={`/user/${user.id}`} className=" tt-icon-avatar">
                         <Avatar size="40" round maxInitials={1} name={user.name} />
                       </Link>
                     </div>
@@ -357,143 +358,146 @@ export default function SingleTreadRoute() {
 
         </div>
         <div className="tt-wrapper-inner">
-          <div className="pt-editor form-default">
-            <h6 className="pt-title">Post Your Reply</h6>
-            <div className="pt-row">
-              <div className="col-left">
-                <ul className="pt-edit-btn">
-                  <li>
-                    <button type="button" className="btn-icon">
-                      <svg className="tt-icon">
-                        <use xlinkHref="#icon-quote" />
-                      </svg>
-                    </button>
-                  </li>
-                  <li>
-                    <button type="button" className="btn-icon">
-                      <svg className="tt-icon">
-                        <use xlinkHref="#icon-bold" />
-                      </svg>
-                    </button>
-                  </li>
-                  <li>
-                    <button type="button" className="btn-icon">
-                      <svg className="tt-icon">
-                        <use xlinkHref="#icon-italic" />
-                      </svg>
-                    </button>
-                  </li>
-                  <li>
-                    <button type="button" className="btn-icon">
-                      <svg className="tt-icon">
-                        <use xlinkHref="#icon-share_topic" />
-                      </svg>
-                    </button>
-                  </li>
-                  <li>
-                    <button type="button" className="btn-icon">
-                      <svg className="tt-icon">
-                        <use xlinkHref="#icon-blockquote" />
-                      </svg>
-                    </button>
-                  </li>
-                  <li>
-                    <button type="button" className="btn-icon">
-                      <svg className="tt-icon">
-                        <use xlinkHref="#icon-performatted" />
-                      </svg>
-                    </button>
-                  </li>
-                  <li className="hr" />
-                  <li>
-                    <button type="button" className="btn-icon">
-                      <svg className="tt-icon">
-                        <use xlinkHref="#icon-upload_files" />
-                      </svg>
-                    </button>
-                  </li>
-                  <li>
-                    <button type="button" className="btn-icon">
-                      <svg className="tt-icon">
-                        <use xlinkHref="#icon-bullet_list" />
-                      </svg>
-                    </button>
-                  </li>
-                  <li>
-                    <button type="button" className="btn-icon">
-                      <svg className="tt-icon">
-                        <use xlinkHref="#icon-heading" />
-                      </svg>
-                    </button>
-                  </li>
-                  <li>
-                    <button type="button" className="btn-icon">
-                      <svg className="tt-icon">
-                        <use xlinkHref="#icon-horizontal_line" />
-                      </svg>
-                    </button>
-                  </li>
-                  <li>
-                    <button type="button" className="btn-icon">
-                      <svg className="tt-icon">
-                        <use xlinkHref="#icon-emoticon" />
-                      </svg>
-                    </button>
-                  </li>
-                  <li>
-                    <button type="button" className="btn-icon">
-                      <svg className="tt-icon">
-                        <use xlinkHref="#icon-settings" />
-                      </svg>
-                    </button>
-                  </li>
-                  <li>
-                    <button type="button" className="btn-icon">
-                      <svg className="tt-icon">
-                        <use xlinkHref="#icon-color_picker" />
-                      </svg>
-                    </button>
-                  </li>
-                </ul>
-              </div>
-              <div className="col-right tt-hidden-mobile">
-                <a href="#" className="btn btn-primary">
-                  Preview
-                </a>
-              </div>
-            </div>
-            <div className="form-group">
-              <textarea
-                name="message"
-                className="form-control"
-                rows={5}
-                placeholder="Lets get started"
-                defaultValue={""}
-              />
-            </div>
-            <div className="pt-row">
-              <div className="col-auto">
-                <div className="checkbox-group">
-                  <input
-                    type="checkbox"
-                    id="checkBox21"
-                    name="checkbox"
-                    defaultChecked={false}
-                  />
-                  <label htmlFor="checkBox21">
-                    <span className="check" />
-                    <span className="box" />
-                    <span className="tt-text">Subscribe to this topic.</span>
-                  </label>
+          <postFetcher.Form method="post">
+            <div className="pt-editor form-default">
+              <h6 className="pt-title">Post Your Reply</h6>
+              <div className="pt-row">
+                <div className="col-left">
+                  <ul className="pt-edit-btn">
+                    <li>
+                      <button type="button" className="btn-icon">
+                        <svg className="tt-icon">
+                          <use xlinkHref="#icon-quote" />
+                        </svg>
+                      </button>
+                    </li>
+                    <li>
+                      <button type="button" className="btn-icon">
+                        <svg className="tt-icon">
+                          <use xlinkHref="#icon-bold" />
+                        </svg>
+                      </button>
+                    </li>
+                    <li>
+                      <button type="button" className="btn-icon">
+                        <svg className="tt-icon">
+                          <use xlinkHref="#icon-italic" />
+                        </svg>
+                      </button>
+                    </li>
+                    <li>
+                      <button type="button" className="btn-icon">
+                        <svg className="tt-icon">
+                          <use xlinkHref="#icon-share_topic" />
+                        </svg>
+                      </button>
+                    </li>
+                    <li>
+                      <button type="button" className="btn-icon">
+                        <svg className="tt-icon">
+                          <use xlinkHref="#icon-blockquote" />
+                        </svg>
+                      </button>
+                    </li>
+                    <li>
+                      <button type="button" className="btn-icon">
+                        <svg className="tt-icon">
+                          <use xlinkHref="#icon-performatted" />
+                        </svg>
+                      </button>
+                    </li>
+                    <li className="hr" />
+                    <li>
+                      <button type="button" className="btn-icon">
+                        <svg className="tt-icon">
+                          <use xlinkHref="#icon-upload_files" />
+                        </svg>
+                      </button>
+                    </li>
+                    <li>
+                      <button type="button" className="btn-icon">
+                        <svg className="tt-icon">
+                          <use xlinkHref="#icon-bullet_list" />
+                        </svg>
+                      </button>
+                    </li>
+                    <li>
+                      <button type="button" className="btn-icon">
+                        <svg className="tt-icon">
+                          <use xlinkHref="#icon-heading" />
+                        </svg>
+                      </button>
+                    </li>
+                    <li>
+                      <button type="button" className="btn-icon">
+                        <svg className="tt-icon">
+                          <use xlinkHref="#icon-horizontal_line" />
+                        </svg>
+                      </button>
+                    </li>
+                    <li>
+                      <button type="button" className="btn-icon">
+                        <svg className="tt-icon">
+                          <use xlinkHref="#icon-emoticon" />
+                        </svg>
+                      </button>
+                    </li>
+                    <li>
+                      <button type="button" className="btn-icon">
+                        <svg className="tt-icon">
+                          <use xlinkHref="#icon-settings" />
+                        </svg>
+                      </button>
+                    </li>
+                    <li>
+                      <button type="button" className="btn-icon">
+                        <svg className="tt-icon">
+                          <use xlinkHref="#icon-color_picker" />
+                        </svg>
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+                {/* Make a preview feature */}
+                <div className="col-right tt-hidden-mobile">
+                  <button className="btn btn-primary">
+                    Preview
+                  </button>
                 </div>
               </div>
-              <div className="col-auto">
-                <a href="#" className="btn btn-secondary btn-width-lg">
-                  Reply
-                </a>
+              <div className="form-group">
+                <textarea
+                  name="message"
+                  className="form-control"
+                  rows={5}
+                  placeholder="Enter your reply here..."
+                  defaultValue={""}
+                />
+              </div>
+              <div className="pt-row">
+                <div className="col-auto">
+                  <div className="checkbox-group">
+                    <input
+                      type="checkbox"
+                      id="checkBox21"
+                      name="subscribe"
+                      defaultChecked={false}
+                    />
+                    <label htmlFor="checkBox21">
+                      <span className="check" />
+                      <span className="box" />
+                      <span className="tt-text">Subscribe to this topic.</span>
+                    </label>
+                  </div>
+                </div>
+                <div className="col-auto">
+                  <button className="btn btn-secondary btn-width-lg" type="submit">
+                    Reply
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
+          </postFetcher.Form>
         </div>
         <div className="tt-topic-list tt-ofset-30">
           <div className="tt-list-search">
@@ -507,7 +511,7 @@ export default function SingleTreadRoute() {
                     className="tt-search__input"
                     placeholder="Search for topics"
                   />
-                  <button className="tt-search__btn" type="submit">
+                  <button style={{height: "100%"}} className="tt-search__btn" type="submit">
                     <BsSearch />
                   </button>
                   <button className="tt-search__close">
