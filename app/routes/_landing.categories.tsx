@@ -1,44 +1,49 @@
 import { Link, useFetcher, useLoaderData } from "@remix-run/react";
 import type { LoaderArgs } from "@remix-run/server-runtime";
-import { BsHeart, BsHeartFill, BsSearch, BsX } from 'react-icons/bs'
+import { BsHeart, BsHeartFill, BsSearch, BsX } from "react-icons/bs";
 
 export const loader = async ({ request }: LoaderArgs) => {
-  const url = new URL(request.url)
+  const url = new URL(request.url);
   const search = new URLSearchParams(url.search);
-  const searchParam = search.get("search") ?? ""
-  const categories = [{
-          title: "politics",
-          threadCount: 1321,
-          description: "Lets discuss about whats happening around the world politics.",
-          id: 0,
-          isFavorite: false
-        }, {
-          title: "education",
-          threadCount: 2100,
-          description: "Learn about learing with these prompts",
-          id: 1,
-          isFavorite: true
-    }]
-  const filteredCategories = categories.filter(category => {
-    console.log(`Did I filter ${category.title}: ${category.title.includes(searchParam)}`)
-    return category.title.includes(searchParam)
-  })
-  return (
+  const searchParam = search.get("search") ?? "";
+  const categories = [
     {
-      categories: filteredCategories
-        
-    })
-}
+      title: "arts",
+      threadCount: 1321,
+      description:
+        "Lets discuss about whats happening around the world politics.",
+      id: 0,
+      isFavorite: false,
+    },
+    {
+      title: "entertainment",
+      threadCount: 2100,
+      description: "Learn about learing with these prompts",
+      id: 4,
+      isFavorite: true,
+    },
+  ];
+  const filteredCategories = categories.filter((category) => {
+    console.log(
+      `Did I filter ${category.title}: ${category.title.includes(searchParam)}`
+    );
+    return category.title.includes(searchParam);
+  });
+  return {
+    categories: filteredCategories,
+  };
+};
 
-
-function CategoryElement({ category: { title, threadCount, description, id, isFavorite } }: any) {
+function CategoryElement({
+  category: { title, threadCount, description, id, isFavorite },
+}: any) {
   return (
     <div className="col-md-6 col-lg-4">
       <div className="tt-item">
         <div className="tt-item-header">
           <ul className="tt-list-badge">
             <li>
-              <Link to={`/categories/${id}`}>
+              <Link to={`/feeds/${id}`}>
                 <span className="tt-color01 tt-badge">{title}</span>
               </Link>
             </li>
@@ -60,11 +65,11 @@ function CategoryElement({ category: { title, threadCount, description, id, isFa
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 export default function Categories() {
-  const { categories } = useLoaderData()
+  const { categories } = useLoaderData();
   const search = useFetcher();
   return (
     <main id="tt-pageContent">
@@ -80,9 +85,13 @@ export default function Categories() {
                   className="tt-search__input"
                   placeholder="Search Categories"
                 />
-                <button style={{height: "100%"}} className="tt-search__btn" type="submit">
+                <button
+                  style={{ height: "100%" }}
+                  className="tt-search__btn"
+                  type="submit"
+                >
                   <svg className="tt-icon">
-                    <BsSearch/>
+                    <BsSearch />
                   </svg>
                 </button>
               </div>
@@ -91,10 +100,12 @@ export default function Categories() {
         </div>
         <div className="tt-categories-list">
           <div className="row">
-            {categories.map((category: any) => <CategoryElement key={category.id} category={category} />)}
+            {categories.map((category: any) => (
+              <CategoryElement key={category.id} category={category} />
+            ))}
           </div>
         </div>
       </div>
     </main>
-  )
+  );
 }

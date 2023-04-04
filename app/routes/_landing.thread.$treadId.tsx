@@ -1,16 +1,39 @@
 import type { LoaderArgs, DataFunctionArgs } from "@remix-run/node";
-import { json } from "@remix-run/node"
-import { Link, NavLink, useFetcher, useLoaderData, useParams, useSearchParams } from "@remix-run/react"
-import Avatar from "react-avatar"
-import { BsBookmark, BsBookmarkFill, BsClock, BsEyeFill, BsFlagFill, BsHandThumbsDown, BsHandThumbsDownFill, BsHandThumbsUp, BsHandThumbsUpFill, BsReply, BsReplyFill, BsSearch, BsSearch, BsShareFill, BsX } from "react-icons/bs"
+import { json } from "@remix-run/node";
+import {
+  Form,
+  Link,
+  NavLink,
+  useFetcher,
+  useLoaderData,
+  useLocation,
+  useParams,
+  useSearchParams,
+} from "@remix-run/react";
+import Avatar from "react-avatar";
+import {
+  BsBookmark,
+  BsBookmarkFill,
+  BsClock,
+  BsEyeFill,
+  BsFlagFill,
+  BsHandThumbsDown,
+  BsHandThumbsDownFill,
+  BsHandThumbsUp,
+  BsHandThumbsUpFill,
+  BsReply,
+  BsReplyFill,
+  BsSearch,
+  BsShareFill,
+  BsX,
+} from "react-icons/bs";
 import { Markdown } from "~/components/markdown";
-import {markdown} from "~/markdown.server"
-
+import { markdown } from "~/markdown.server";
 
 export const loader = async ({ request }: LoaderArgs) => {
-  const url = new URL(request.url)
+  const url = new URL(request.url);
   const search = new URLSearchParams(url.search);
-  const searchParam = search.get("search") ?? ""
+  const searchParam = search.get("search") ?? "";
   const thread = {
     title: "Web Hosting Packages for ThemeForest WordPress",
     content: markdown(`# Get ready for Movember!
@@ -23,21 +46,21 @@ Authors and customers with facial hair unite! Simply grow, groom, and share your
       `),
     user: {
       id: "30jq9f09eq4jfei",
-      name: "dylan89"
+      name: "dylan89",
     },
     tags: [
       {
         id: 2,
-        name: "exchange"
+        name: "exchange",
       },
       {
         id: 10,
-        name: "themeforest"
+        name: "themeforest",
       },
       {
         id: 15,
-        name: "elements"
-      }
+        name: "elements",
+      },
     ],
     likes: 671,
     dislikes: 39,
@@ -51,71 +74,77 @@ Authors and customers with facial hair unite! Simply grow, groom, and share your
 Are there any special recommendations for design or an updated guide that includes new preview sizes, including retina displays?`),
         user: {
           name: "telsa02",
-          id: "03j2qj9qf9034j"
+          id: "03j2qj9qf9034j",
         },
         isBestAnswer: false,
         isFlagged: false,
         likes: 19,
         dislikes: 19,
-      }
-    ]
-  }
+      },
+    ],
+  };
 
-  const relatedTopics = [{
+  const relatedTopics = [
+    {
       id: "0293j4jf43",
-    title: "Does Envato act against the authors of Envato markets?",
-    category: { color: "orange", name: "category" },
-    user: {
-      id: "0293j4jf43",
-      name: "Fyer"
+      title: "Does Envato act against the authors of Envato markets?",
+      category: { color: "orange", name: "category" },
+      user: {
+        id: "0293j4jf43",
+        name: "Fyer",
+      },
+      likes: 358,
+      replies: 68,
+      views: 8301,
+      activity: "1d",
     },
-    likes: 358,
-    replies: 68,
-    views: 8301,
-    activity: "1d"
-  },
-  {
+    {
       id: "0293j4jf43",
-    title: "We Want to Hear From You! What Would You Like?",
-    category: { color: "gray", name: "movies" },
-    user: {
-      id: "0293j4jf43",
-      name: "Fyer"
+      title: "We Want to Hear From You! What Would You Like?",
+      category: { color: "gray", name: "movies" },
+      user: {
+        id: "0293j4jf43",
+        name: "Fyer",
+      },
+      likes: 358,
+      replies: 68,
+      views: 8301,
+      activity: "1d",
     },
-    likes: 358,
-    replies: 68,
-    views: 8301,
-    activity: "1d"
-  }, {
+    {
       id: "0293j4jf43",
-    title: "Seeking partner backend developer",
-    category: { color: "orange", name: "movies" },
-    user: {
-      id: "0293j4jf43",
-      name: "Fyer"
+      title: "Seeking partner backend developer",
+      category: { color: "orange", name: "movies" },
+      user: {
+        id: "0293j4jf43",
+        name: "Fyer",
+      },
+      likes: 358,
+      replies: 68,
+      views: 3331,
+      activity: "1d",
     },
-    likes: 358,
-    replies: 68,
-    views: 3331,
-    activity: "1d"
-  }, {
+    {
       id: "0293j4jf43",
-    title: "Cannot customize my intro",
-    category: { color: "blue", name: "video games" },
-    user: {
-      id: "0293j4jf43",
-      name: "Fyer"
+      title: "Cannot customize my intro",
+      category: { color: "blue", name: "video games" },
+      user: {
+        id: "0293j4jf43",
+        name: "Fyer",
+      },
+      likes: 858,
+      replies: 20,
+      views: 3301,
+      activity: "2d",
     },
-    likes: 858,
-    replies: 20,
-    views: 3301,
-    activity: "2d"
-  }]
+  ];
 
-  const filteredRelatedTopics = relatedTopics.filter(topic => topic.title.includes(searchParam))
-  console.log(filteredRelatedTopics)
-  return json({ thread, related: filteredRelatedTopics })
-}
+  const filteredRelatedTopics = relatedTopics.filter((topic) =>
+    topic.title.includes(searchParam)
+  );
+  console.log(filteredRelatedTopics);
+  return json({ thread, related: filteredRelatedTopics });
+};
 
 function ThreadHeaderElment({ thread }) {
   return (
@@ -125,13 +154,21 @@ function ThreadHeaderElment({ thread }) {
           <div className="tt-item-info info-top">
             <div className="tt-avatar-icon">
               <i className="tt-icon">
-                <Avatar round size="40" name={thread.user.name} maxInitials={1} />
+                <Avatar
+                  round
+                  size="40"
+                  name={thread.user.name}
+                  maxInitials={1}
+                />
               </i>
             </div>
             <div className="tt-avatar-title">
               <Link to={`/user/${thread.user.id}`}>{thread.user.name}</Link>
             </div>
-            <span style={{ display: "flex", alignItems: "center" }} className="tt-info-time">
+            <span
+              style={{ display: "flex", alignItems: "center" }}
+              className="tt-info-time"
+            >
               <i className="tt-icon">
                 <BsClock />
               </i>
@@ -161,9 +198,14 @@ function ThreadHeaderElment({ thread }) {
             </ul>
           </div>
         </div>
-        <div className="tt-item-description"><Markdown content={thread.content}/></div>
+        <div className="tt-item-description">
+          <Markdown content={thread.content} />
+        </div>
         <div className="tt-item-info info-bottom">
-          <button style={{ display: "flex", flexDirection: "column" }} className="tt-icon-btn">
+          <button
+            style={{ display: "flex", flexDirection: "column" }}
+            className="tt-icon-btn"
+          >
             <i className="tt-icon">
               <BsHandThumbsUpFill />
             </i>
@@ -171,16 +213,21 @@ function ThreadHeaderElment({ thread }) {
               {thread.likes}
             </span>
           </button>
-          <button style={{ display: "flex", flexDirection: "column" }} className="tt-icon-btn">
+          <button
+            style={{ display: "flex", flexDirection: "column" }}
+            className="tt-icon-btn"
+          >
             <i className="tt-icon">
               <BsHandThumbsDownFill />
             </i>
             <span style={{ margin: 0 }} className="tt-text">
               {thread.dislikes}
-
             </span>
           </button>
-          <button style={{ display: "flex", flexDirection: "column" }} className="tt-icon-btn">
+          <button
+            style={{ display: "flex", flexDirection: "column" }}
+            className="tt-icon-btn"
+          >
             <i className="tt-icon">
               <BsBookmark />
             </i>
@@ -207,25 +254,36 @@ function ThreadHeaderElment({ thread }) {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 function ThreadBodyElement({ thread }) {
   return (
-    <article className={`tt-item ${thread.isBestAnswer ? "tt-wrapper-success" : ""} ${thread.isFlagged ? "tt-wrapper-danger" : ""}`} >
+    <article
+      className={`tt-item ${thread.isBestAnswer ? "tt-wrapper-success" : ""} ${
+        thread.isFlagged ? "tt-wrapper-danger" : ""
+      }`}
+    >
       <div className="tt-single-topic">
         <div className="tt-item-header pt-noborder">
           <div className="tt-item-info info-top">
             <div className="tt-avatar-icon">
               <i className="tt-icon">
-                <Avatar size="40" round name={thread.user.name} maxInitials={1} />
-
+                <Avatar
+                  size="40"
+                  round
+                  name={thread.user.name}
+                  maxInitials={1}
+                />
               </i>
             </div>
             <div className="tt-avatar-title">
               <Link to={`/user/${thread.user.id}`}>{thread.user.name}</Link>
             </div>
-            <span style={{ display: "flex", alignItems: "center" }} className="tt-info-time">
+            <span
+              style={{ display: "flex", alignItems: "center" }}
+              className="tt-info-time"
+            >
               <i className="tt-icon">
                 <BsClock />
               </i>
@@ -233,32 +291,53 @@ function ThreadBodyElement({ thread }) {
             </span>
           </div>
         </div>
-        <div className="tt-item-description"><Markdown content={thread.content} /></div>
+        <div className="tt-item-description">
+          <Markdown content={thread.content} />
+        </div>
         <div className="tt-item-info info-bottom">
-          <button style={{ display: "flex", flexDirection: "column" }} className="tt-icon-btn">
+          <button
+            style={{ display: "flex", flexDirection: "column" }}
+            className="tt-icon-btn"
+          >
             <i className="tt-icon">
               <BsHandThumbsUp />
             </i>
-            <span style={{ margin: 0 }} className="tt-text">{thread.likes}</span>
+            <span style={{ margin: 0 }} className="tt-text">
+              {thread.likes}
+            </span>
           </button>
-          <button style={{ display: "flex", flexDirection: "column" }} className="tt-icon-btn">
+          <button
+            style={{ display: "flex", flexDirection: "column" }}
+            className="tt-icon-btn"
+          >
             <i className="tt-icon">
               <BsHandThumbsDown />
             </i>
-            <span style={{ margin: 0 }} className="tt-text">{thread.dislikes}</span>
+            <span style={{ margin: 0 }} className="tt-text">
+              {thread.dislikes}
+            </span>
           </button>
           <div className="col-separator" />
-          <button style={{ display: "flex", flexDirection: "column" }} className="tt-icon-btn tt-hover-02 tt-small-indent">
+          <button
+            style={{ display: "flex", flexDirection: "column" }}
+            className="tt-icon-btn tt-hover-02 tt-small-indent"
+          >
             <i className="tt-icon">
               <BsShareFill />
             </i>
           </button>
-          <button style={{ display: "flex", flexDirection: "column" }} className="tt-icon-btn tt-hover-02 tt-small-indent">
+          <button
+            style={{ display: "flex", flexDirection: "column" }}
+            className="tt-icon-btn tt-hover-02 tt-small-indent"
+          >
             <i className="tt-icon">
               <BsFlagFill />
             </i>
           </button>
-          <button style={{ display: "flex", flexDirection: "column" }} className="tt-icon-btn tt-hover-02 tt-small-indent">
+          <button
+            style={{ display: "flex", flexDirection: "column" }}
+            className="tt-icon-btn tt-hover-02 tt-small-indent"
+          >
             <i className="tt-icon">
               <BsReplyFill />
             </i>
@@ -266,20 +345,20 @@ function ThreadBodyElement({ thread }) {
         </div>
       </div>
     </article>
-  )
+  );
 }
 
-function RelatedThread({thread}) {
-  const color = thread.category.color
+function RelatedThread({ thread }) {
+  const color = thread.category.color;
   const colorKey = {
     orange: "tt-color05",
     blue: "tt-color03",
     gray: "tt-color04",
-  }
+  };
   return (
     <div className="tt-item">
       <div className="tt-col-avatar">
-          <Avatar size="40" round name={thread.user.name} maxInitials={1} />
+        <Avatar size="40" round name={thread.user.name} maxInitials={1} />
       </div>
       <div className="tt-col-description">
         <h6 className="tt-title">
@@ -289,7 +368,9 @@ function RelatedThread({thread}) {
           <div className="col-11">
             <ul className="tt-list-badge">
               <li className="show-mobile">
-                <span className={`tt-color-04 tt-badge`}>{thread.category.name}</span>
+                <span className={`tt-color-04 tt-badge`}>
+                  {thread.category.name}
+                </span>
               </li>
             </ul>
           </div>
@@ -299,14 +380,18 @@ function RelatedThread({thread}) {
         </div>
       </div>
       <div className="tt-col-category">
-        <span className={`${colorKey[color]} tt-badge`}>{thread.category.name}</span>
+        <span className={`${colorKey[color]} tt-badge`}>
+          {thread.category.name}
+        </span>
       </div>
       <div className="tt-col-value hide-mobile">{thread.likes}</div>
-      <div className="tt-col-value tt-color-select hide-mobile">{thread.replies}</div>
+      <div className="tt-col-value tt-color-select hide-mobile">
+        {thread.replies}
+      </div>
       <div className="tt-col-value hide-mobile">{thread.views}</div>
       <div className="tt-col-value hide-mobile">{thread.activity}</div>
     </div>
-  )
+  );
 }
 
 function newUserPopup() {
@@ -334,24 +419,29 @@ function newUserPopup() {
         </button>
       </div>
     </div>
-  )
+  );
 }
 
 export default function SingleTreadRoute() {
-  const { thread, related } = useLoaderData<typeof loader>()
-  const users = [...thread.posts.map(post => post.user), thread.user]
-  const postFetcher = useFetcher()
-  const searchFetcher = useFetcher()
-  const [params, setParams] = useSearchParams()
-  const repliesParam = params.get("replies")
-  const searchParam = params.get("search") || ""
+  const { thread, related } = useLoaderData<typeof loader>();
+  const users = [...thread.posts.map((post) => post.user), thread.user];
+  const postFetcher = useFetcher();
+  const searchFetcher = useFetcher();
+  const [params, setParams] = useSearchParams();
+  const repliesParam = params.get("replies");
+  const location = useLocation();
+  const searchParam = params.get("search") || "";
 
-  let optimisticRelated = [...related]
+  let optimisticRelated = [...related];
 
   if (searchFetcher.state === "loading") {
-    optimisticRelated = optimisticRelated.filter((relatedThread) => relatedThread.title.toLowerCase().includes(searchParam))
+    optimisticRelated = optimisticRelated.filter((relatedThread) =>
+      relatedThread.title.toLowerCase().includes(searchParam)
+    );
   }
-  const RelatedElements = optimisticRelated.map((relatedThread, key) => <RelatedThread thread={relatedThread} key={key} />)
+  const RelatedElements = optimisticRelated.map((relatedThread, key) => (
+    <RelatedThread thread={relatedThread} key={key} />
+  ));
   return (
     <main id="tt-pageContent">
       <div className="container">
@@ -363,16 +453,21 @@ export default function SingleTreadRoute() {
               <h6 className="tt-title">Thread Status</h6>
               <div className="tt-row-icon">
                 <div className="tt-item">
-                  <span style={{ display: "flex", flexDirection: "column" }} className="tt-icon-btn tt-position-bottom">
+                  <span
+                    style={{ display: "flex", flexDirection: "column" }}
+                    className="tt-icon-btn tt-position-bottom"
+                  >
                     <i className="tt-icon">
                       <BsReplyFill />
-
                     </i>
                     <span className="tt-text">{thread.replies}</span>
                   </span>
                 </div>
                 <div className="tt-item">
-                  <span style={{ display: "flex", flexDirection: "column" }} className="tt-icon-btn tt-position-bottom">
+                  <span
+                    style={{ display: "flex", flexDirection: "column" }}
+                    className="tt-icon-btn tt-position-bottom"
+                  >
                     <i className="tt-icon">
                       <BsEyeFill />
                     </i>
@@ -380,7 +475,10 @@ export default function SingleTreadRoute() {
                   </span>
                 </div>
                 <div className="tt-item">
-                  <span style={{ display: "flex", flexDirection: "column" }} className="tt-icon-btn tt-position-bottom">
+                  <span
+                    style={{ display: "flex", flexDirection: "column" }}
+                    className="tt-icon-btn tt-position-bottom"
+                  >
                     <i className="tt-icon">
                       <BsHandThumbsUpFill />
                     </i>
@@ -388,7 +486,10 @@ export default function SingleTreadRoute() {
                   </span>
                 </div>
                 <div className="tt-item">
-                  <span style={{ display: "flex", flexDirection: "column" }} className="tt-icon-btn tt-position-bottom">
+                  <span
+                    style={{ display: "flex", flexDirection: "column" }}
+                    className="tt-icon-btn tt-position-bottom"
+                  >
                     <i className="tt-icon">
                       <BsBookmarkFill />
                     </i>
@@ -412,10 +513,15 @@ export default function SingleTreadRoute() {
                   return (
                     <div key={key} className="tt-item">
                       <Link to={`/user/${user.id}`} className=" tt-icon-avatar">
-                        <Avatar size="40" round maxInitials={1} name={user.name} />
+                        <Avatar
+                          size="40"
+                          round
+                          maxInitials={1}
+                          name={user.name}
+                        />
                       </Link>
                     </div>
-                  )
+                  );
                 })}
               </div>
               <hr />
@@ -423,28 +529,58 @@ export default function SingleTreadRoute() {
                 <h6 className="tt-title">Sort replies by:</h6>
                 <ul className="tt-list-badge tt-size-lg">
                   <li>
-                    <Link preventScrollReset to={{search: "?replies=recent"}}>
-                      <span className={`${repliesParam === "recent" ? "tt-color02" : ""} tt-badge`}>Recent</span>
+                    <Link preventScrollReset to={{ search: "?replies=recent" }}>
+                      <span
+                        className={`${
+                          repliesParam === "recent" ? "tt-color02" : ""
+                        } tt-badge`}
+                      >
+                        Recent
+                      </span>
                     </Link>
                   </li>
                   <li>
                     <Link to={`?replies=mostliked`} preventScrollReset>
-                      <span className={`${repliesParam === "mostliked" ? "tt-color02" : ""} tt-badge`}>Most Liked</span>
+                      <span
+                        className={`${
+                          repliesParam === "mostliked" ? "tt-color02" : ""
+                        } tt-badge`}
+                      >
+                        Most Liked
+                      </span>
                     </Link>
                   </li>
                   <li>
                     <Link to={`?replies=longest`} preventScrollReset>
-                      <span className={`${repliesParam === "longest" ? "tt-color02" : ""} tt-badge`}>Longest</span>
+                      <span
+                        className={`${
+                          repliesParam === "longest" ? "tt-color02" : ""
+                        } tt-badge`}
+                      >
+                        Longest
+                      </span>
                     </Link>
                   </li>
                   <li>
                     <Link to={`?replies=shortest`} preventScrollReset>
-                      <span className={`${repliesParam === "shortest" ? "tt-color02" : ""} tt-badge`}>Shortest</span>
+                      <span
+                        className={`${
+                          repliesParam === "shortest" ? "tt-color02" : ""
+                        } tt-badge`}
+                      >
+                        Shortest
+                      </span>
                     </Link>
                   </li>
                   <li>
                     <Link to={`?replies=acceptedanswers`} preventScrollReset>
-                      <span className={`${repliesParam === "acceptedanswers" ? "tt-color02" : ""} tt-badge`}>Accepted Answers</span>
+                      <span
+                        className={`${
+                          repliesParam === "acceptedanswers" ? "tt-color02" : ""
+                        } tt-badge`}
+                      >
+                        Accepted Answers
+                      </span>
                     </Link>
                   </li>
                 </ul>
@@ -452,18 +588,16 @@ export default function SingleTreadRoute() {
             </div>
           </div>
 
-          {thread.posts.map((post, index) =>
+          {thread.posts.map((post, index) => (
             <ThreadBodyElement key={index} thread={post} />
-          )}
+          ))}
         </div>
         <div className="tt-wrapper-inner">
           <h4 className="tt-title-separator">
             <span>You’ve reached the end of replies</span>
           </h4>
         </div>
-        <div className="tt-topic-list">
-
-        </div>
+        <div className="tt-topic-list"></div>
         <div className="tt-wrapper-inner">
           <postFetcher.Form method="post">
             <div className="pt-editor form-default">
@@ -567,9 +701,7 @@ export default function SingleTreadRoute() {
                 </div>
                 {/* Make a preview feature */}
                 <div className="col-right tt-hidden-mobile">
-                  <button className="btn btn-primary">
-                    Preview
-                  </button>
+                  <button className="btn btn-primary">Preview</button>
                 </div>
               </div>
               <div className="form-group">
@@ -598,7 +730,10 @@ export default function SingleTreadRoute() {
                   </div>
                 </div>
                 <div className="col-auto">
-                  <button className="btn btn-secondary btn-width-lg" type="submit">
+                  <button
+                    className="btn btn-secondary btn-width-lg"
+                    type="submit"
+                  >
                     Reply
                   </button>
                 </div>
@@ -611,19 +746,23 @@ export default function SingleTreadRoute() {
             <div className="tt-title">Suggested Topics</div>
             {/* tt-search */}
             <div className="tt-search">
-              <searchFetcher.Form className="search-wrapper">
+              <Form className="search-wrapper" method="get" action="/search">
                 <div className="search-form">
                   <input
                     type="text"
                     className="tt-search__input"
-                    name="search"
+                    name="query"
                     placeholder="Search for topics"
                   />
-                  <button style={{ height: "100%" }} className="tt-search__btn" type="submit">
+                  <button
+                    style={{ height: "100%" }}
+                    className="tt-search__btn"
+                    type="submit"
+                  >
                     <BsSearch />
                   </button>
                 </div>
-              </searchFetcher.Form>
+              </Form>
             </div>
             {/* /tt-search */}
           </div>
@@ -640,7 +779,6 @@ export default function SingleTreadRoute() {
           <div className="tt-row-btn">
             <button type="button" className="btn-icon js-topiclist-showmore">
               <svg className="tt-icon">
-
                 <use xlinkHref="#icon-load_lore_icon" />
               </svg>
             </button>
@@ -648,11 +786,5 @@ export default function SingleTreadRoute() {
         </div>
       </div>
     </main>
-
-
-  )
-}
-
-export const action = async ({request}: DataActionArgs) => {
-  
+  );
 }
