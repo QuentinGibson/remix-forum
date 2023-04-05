@@ -1,6 +1,7 @@
 import { Link, useFetcher, useLoaderData } from "@remix-run/react";
 import type { LoaderArgs } from "@remix-run/server-runtime";
-import { BsHeart, BsHeartFill, BsSearch, BsX } from "react-icons/bs";
+import { BsHeartFill, Bs, BsHeartSearch, BsX } from "react-icons/bs";
+import CategoryItem from "~/components/CategoryItem";
 
 export const loader = async ({ request }: LoaderArgs) => {
   const url = new URL(request.url);
@@ -33,40 +34,6 @@ export const loader = async ({ request }: LoaderArgs) => {
     categories: filteredCategories,
   };
 };
-
-function CategoryElement({
-  category: { title, threadCount, description, id, isFavorite },
-}: any) {
-  return (
-    <div className="col-md-6 col-lg-4">
-      <div className="tt-item">
-        <div className="tt-item-header">
-          <ul className="tt-list-badge">
-            <li>
-              <Link to={`/feeds/${id}`}>
-                <span className="tt-color01 tt-badge">{title}</span>
-              </Link>
-            </li>
-          </ul>
-          <h6 className="tt-title">
-            <a href="page-categories-single.html">Threads - {threadCount}</a>
-          </h6>
-        </div>
-        <div className="tt-item-layout">
-          <div className="innerwrapper">{description}</div>
-          <button className="tt-btn-icon">
-            <i className="tt-icon">
-              {isFavorite ? <BsHeartFill /> : <BsHeart />}
-              <svg>
-                <use xlinkHref="#icon-favorite" />
-              </svg>
-            </i>
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 export default function Categories() {
   const { categories } = useLoaderData();
@@ -101,7 +68,7 @@ export default function Categories() {
         <div className="tt-categories-list">
           <div className="row">
             {categories.map((category: any) => (
-              <CategoryElement key={category.id} category={category} />
+              <CategoryItem key={category.id} category={category} />
             ))}
           </div>
         </div>
