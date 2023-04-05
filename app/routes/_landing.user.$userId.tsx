@@ -1,5 +1,5 @@
-import { Link, NavLink, Outlet } from "@remix-run/react"
-import Avatar from "react-avatar"
+import { Link, NavLink, Outlet } from "@remix-run/react";
+import Avatar from "react-avatar";
 
 export default function SingleUserRoute() {
   return (
@@ -16,13 +16,6 @@ export default function SingleUserRoute() {
               <div className="tt-title">
                 <a href="#">Dylan89</a>
               </div>
-              <ul className="tt-list-badge">
-                <li>
-                  <a href="#">
-                    <span className="tt-color14 tt-badge">LVL : 26</span>
-                  </a>
-                </li>
-              </ul>
             </div>
             <div className="tt-col-btn" id="js-settings-btn">
               <div className="tt-list-btn">
@@ -57,7 +50,7 @@ export default function SingleUserRoute() {
                 <NavLink
                   className="nav-link"
                   data-toggle="tab"
-                  to={{ pathname: "/user/fakuserid23/threads"}}
+                  to={{ pathname: "/user/fakuserid23/threads" }}
                   role="tab"
                 >
                   <span>Threads</span>
@@ -67,7 +60,7 @@ export default function SingleUserRoute() {
                 <NavLink
                   className="nav-link"
                   data-toggle="tab"
-                  to={{ pathname: "/user/fakuserid23/replies"}}
+                  to={{ pathname: "/user/fakuserid23/replies" }}
                   role="tab"
                 >
                   <span>Replies</span>
@@ -77,7 +70,7 @@ export default function SingleUserRoute() {
                 <NavLink
                   className="nav-link"
                   data-toggle="tab"
-                  to={{ pathname: "/user/fakuserid23/followers"}}
+                  to={{ pathname: "/user/fakuserid23/followers" }}
                   role="tab"
                 >
                   <span>526 Followers</span>
@@ -109,5 +102,5 @@ export default function SingleUserRoute() {
         </div>
       </div>
     </main>
-  )
+  );
 }

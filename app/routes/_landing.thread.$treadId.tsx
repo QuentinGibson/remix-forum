@@ -10,6 +10,7 @@ import {
   useParams,
   useSearchParams,
 } from "@remix-run/react";
+import { useRef, useState } from "react";
 import Avatar from "react-avatar";
 import {
   BsBookmark,
@@ -430,6 +431,8 @@ export default function SingleTreadRoute() {
   const [params, setParams] = useSearchParams();
   const repliesParam = params.get("replies");
   const location = useLocation();
+  const [preview, setPreview] = useState<string>("");
+  const contentRef = useRef<HTMLTextAreaElement>(null);
   const searchParam = params.get("search") || "";
 
   let optimisticRelated = [...related];
@@ -597,7 +600,13 @@ export default function SingleTreadRoute() {
             <span>You’ve reached the end of replies</span>
           </h4>
         </div>
-        <div className="tt-topic-list"></div>
+        <div className="tt-topic-list">
+          {preview && (
+            <div className="tt-item">
+              <div className="tt-item-description">{preview}</div>
+            </div>
+          )}
+        </div>
         <div className="tt-wrapper-inner">
           <postFetcher.Form method="post">
             <div className="pt-editor form-default">
@@ -701,12 +710,19 @@ export default function SingleTreadRoute() {
                 </div>
                 {/* Make a preview feature */}
                 <div className="col-right tt-hidden-mobile">
-                  <button className="btn btn-primary">Preview</button>
+                  <button
+                    onClick={() => setPreview(contentRef.current?.value ?? "")}
+                    type="button"
+                    className="btn btn-primary"
+                  >
+                    Preview
+                  </button>
                 </div>
               </div>
               <div className="form-group">
                 <textarea
                   name="message"
+                  ref={contentRef}
                   className="form-control"
                   rows={5}
                   placeholder="Enter your reply here..."
