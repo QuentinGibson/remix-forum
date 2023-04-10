@@ -1,6 +1,7 @@
-import { LoaderArgs, json } from "@remix-run/node";
+import { LoaderArgs, json, Link } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
 import { BsFilter, BsPencil, BsSearch } from "react-icons/bs";
+import Avatar from "react-avatar";
 
 export const loader = async ({ request }: LoaderArgs) => {
   const data = [
@@ -129,6 +130,22 @@ export const loader = async ({ request }: LoaderArgs) => {
   ];
   return json({ chat: data });
 };
+
+function ConversationCard({data}: any) {
+  return (
+    <Link href="#" className="tt-item">
+                    <div className="tt-col-avatar">
+                      <Avatar className="tt-icon" round size="40" value={data.user.name} />
+                    </div>
+                    <div className="tt-col-description">
+                      <h4 className="tt-title">
+                        <span>{data.message.user.name}</span> <span className="time">{data.message.createdBy}</span>
+                      </h4>
+                      <div className="tt-message tt-select">{data.message.user}:{data.message.content}</div>
+                    </div>
+                  </Link>
+  )
+}
 
 export default function MessageRoute() {
   const { chat } = useLoaderData<typeof loader>();
