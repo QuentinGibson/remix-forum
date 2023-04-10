@@ -1,225 +1,226 @@
+import { Link, useLoaderData } from "@remix-run/react";
+import { LoaderArgs, json } from "@remix-run/server-runtime";
+import Avatar from "react-avatar";
+import { BsArrowLeft, BsBell, BsBellFill } from "react-icons/bs";
+
+export const loader = async ({ request, params }: LoaderArgs) => {
+  const data = [
+    {
+      id: '1',
+      createdBy: new Date(2022, 10, 11, 22, 30).toLocaleDateString("en-US", {
+        month: "2-digit",
+        day: "2-digit",
+        year: "numeric",
+      }),
+      sender: "Admin",
+      reciever: "Taylor",
+      content: "need to see that"
+    },
+    {
+      id: '2',
+      createdBy: new Date(2022, 10, 11, 22, 45).toLocaleDateString("en-US", {
+        month: "2-digit",
+        day: "2-digit",
+        year: "numeric",
+      }),
+      sender: "Taylor",
+      receiver: "Admin",
+      content: "What do you need to see?"
+    },
+    {
+      id: '3',
+      createdBy: new Date(2022, 10, 11, 23, 0).toLocaleDateString("en-US", {
+        month: "2-digit",
+        day: "2-digit",
+        year: "numeric",
+      }),
+      sender: "Admin",
+      receiver: "Taylor",
+      content: "The new report that was just released."
+    },
+    {
+      id: '4',
+      createdBy: new Date(2022, 10, 12, 8, 15).toLocaleDateString("en-US", {
+        month: "2-digit",
+        day: "2-digit",
+        year: "numeric",
+      }),
+      sender: "Admin",
+      receiver: "Taylor",
+      content: "Did you get a chance to look at the report?"
+    },
+    {
+      id: '5',
+      createdBy: new Date(2022, 10, 12, 9, 30).toLocaleDateString("en-US", {
+        month: "2-digit",
+        day: "2-digit",
+        year: "numeric",
+      }),
+      sender: "Taylor",
+      receiver: "Admin",
+      content: "Yes, I reviewed it this morning."
+    },
+    {
+      id: '6',
+      createdBy: new Date(2022, 10, 12, 11, 0).toLocaleDateString("en-US", {
+        month: "2-digit",
+        day: "2-digit",
+        year: "numeric",
+      }),
+      sender: "Admin",
+      receiver: "Taylor",
+      content: "What did you think?"
+    },
+    {
+      id: '7',
+      createdBy: new Date(2022, 10, 12, 11, 15).toLocaleDateString("en-US", {
+        month: "2-digit",
+        day: "2-digit",
+        year: "numeric",
+      }),
+      sender: "Taylor",
+      receiver: "Admin",
+      content: "Overall, I thought it was a good analysis."
+    },
+    {
+      id: '8',
+      createdBy: new Date(2022, 10, 12, 12, 30).toLocaleDateString("en-US", {
+        month: "2-digit",
+        day: "2-digit",
+        year: "numeric",
+      }),
+      sender: "Admin",
+      receiver: "Taylor",
+      content: "Glad to hear it. We worked hard on that report."
+    },
+    {
+      id: '9',
+      createdBy: new Date(2022, 10, 13, 9, 0).toLocaleDateString("en-US", {
+        month: "2-digit",
+        day: "2-digit",
+        year: "numeric",
+      }),
+      sender: "Taylor",
+      receiver: "Admin",
+      content: "Can we schedule a meeting to discuss the next steps?"
+    },
+    {
+      id: '10',
+      createdBy: new Date(2022, 10, 13, 10, 15).toLocaleDateString("en-US", {
+        month: "2-digit",
+        day: "2-digit",
+        year: "numeric",
+      }),
+      sender: "Admin",
+      receiver: "Taylor",
+      content: "Sure, let's aim for next Tuesday at 2 PM."
+    },
+    {
+      id: '11',
+      createdBy: new Date(2022, 10, 13, 10, 30).toLocaleDateString("en-US", {
+        month: "2-digit",
+        day: "2-digit",
+        year: "numeric",
+      }),
+      sender: "Taylor",
+      receiver: "Admin",
+      content: "That works for me. Thank you."
+    },
+    {
+      id: '12',
+      createdBy: new Date(2022, 10, 13, 10, 45).toLocaleDateString("en-US", {
+        month: "2-digit",
+        day: "2-digit",
+        year: "numeric",
+      }),
+      sender: "Admin",
+      receiver: "Taylor",
+      content: "You're welcome. I'll send you a calendar invite shortly."
+    }
+  ]
+  return json({ history: data.sort((a, b) => new Date(b.createdBy).getTime() + new Date(a.createdBy).getTime()) })
+};
+function Messages({ messages }: any) {
+  // Set a timestamp for the first message in the array
+  // this is the first date of the conversation
+  let timeStamp = messages[0]
+  let RenderArray = [];
+  const MessageElement = (message: any) => (
+    <div key={message.id} className="tt-item">
+      <div className="tt-col-avatar">
+        <svg className="tt-icon">
+          <use xlinkHref="#icon-ava-a" />
+        </svg>
+        <Avatar round size="40" name={message.sender} maxInitials={1} />
+      </div>
+      <div className="tt-col-description">
+        <h4 className="tt-title">
+          <Link to={`/user/${message.id}`}>{message.sender}</Link> <span className="time">{message.createdBy}</span>
+        </h4>
+        <p>{message.content}</p>
+      </div>
+    </div>
+  )
+
+  const TimeStampElement = (timestamp: Date, key: string) => {
+
+    return (
+      <div key={key} className="tt-item-title">
+        <span>{timestamp.toString()}</span>
+      </div>
+    )
+  }
+  // Loop through the messages array
+  for (let i = 0; i < messages.length; i++) {
+    // If the current message is the first message in the array
+    // or the current message has a different date than the previous message
+    // then we want to render a timestamp
+    if (i === 0 || messages[i].createdBy !== messages[i - 1].createdBy) {
+      // Push the timestamp to the RenderArray
+      RenderArray.push(TimeStampElement(messages[i].createdBy, `${messages[i].id} + 'timestamp'`))
+    }
+    // Push the message to the RenderArray
+    RenderArray.push(MessageElement(messages[i]))
+  }
+  return (
+    <>
+      {RenderArray}
+    </>
+  )
+
+}
 export default function ConversationRoute() {
-return (
-  <>
-  <div className="tt-title-content">
-    <a href="#" className="tt-toggle-aside">
-      <i className="tt-icon">
-        <svg className="icon">
-          <use xlinkHref="#icon-arrow_left" />
-        </svg>
-      </i>
-    </a>
-    <h2 className="tt-title">Kevin</h2>
-    <div className="tt-description">Last seen 3h ago</div>
-    <a href="#" className="tt-icon-link">
-      <i className="tt-icon">
-        <svg className="icon">
-          <use xlinkHref="#notification" />
-        </svg>
-      </i>
-    </a>
-  </div>
-  <div className="tt-list-time-topic">
-    <div className="tt-item-title">
-      <span>12/26/2017</span>
-    </div>
-    <div className="tt-item">
-      <div className="tt-col-avatar">
-        <svg className="tt-icon">
-          <use xlinkHref="#icon-ava-k" />
-        </svg>
+  const { history } = useLoaderData<typeof loader>();
+  return (
+    <>
+      <div className="tt-title-content">
+        <h2 className="tt-title">Taylor</h2>
+        <div className="tt-description">Last seen 3h ago</div>
       </div>
-      <div className="tt-col-description">
-        <h4 className="tt-title">
-          <a href="#">Kevin</a> <span className="time">3:12 AM</span>
-        </h4>
-        <p>
-          How is it going man? Did you see my new forum{" "}
-          <a href="#" className="tt-underline-02">
-            post?
-          </a>
-        </p>
+      <div className="tt-list-time-topic">
+        <Messages messages={history} />
       </div>
-    </div>
-    <div className="tt-item">
-      <div className="tt-col-avatar">
-        <svg className="tt-icon">
-          <use xlinkHref="#icon-ava-a" />
-        </svg>
-      </div>
-      <div className="tt-col-description">
-        <h4 className="tt-title">
-          <a href="#">azyrusmax</a> <span className="time">3:16 AM</span>
-        </h4>
-        <p>
-          Hey, going good, what about you? yes I saw your post, great stuff man{" "}
-          <a href="#" className="tt-underline-02">
-            post?
-          </a>
-        </p>
-      </div>
-    </div>
-    <div className="tt-item-title">
-      <span>12/27/2017</span>
-    </div>
-    <div className="tt-item">
-      <div className="tt-col-avatar">
-        <svg className="tt-icon">
-          <use xlinkHref="#icon-ava-k" />
-        </svg>
-      </div>
-      <div className="tt-col-description">
-        <h4 className="tt-title">
-          <a href="#">Kevin</a> <span className="time">10:49 AM</span>
-        </h4>
-        <p>I’m doing good too, how’s business going?</p>
-      </div>
-    </div>
-    <div className="tt-item">
-      <div className="tt-col-avatar">
-        <svg className="tt-icon">
-          <use xlinkHref="#icon-ava-a" />
-        </svg>
-      </div>
-      <div className="tt-col-description">
-        <h4 className="tt-title">
-          <a href="#">Kevin</a> <span className="time">10:49 AM</span>
-        </h4>
-        <p>Business is good, but going a bit slow than usual.</p>
-      </div>
-    </div>
-    <div className="tt-item">
-      <div className="tt-col-avatar">
-        <svg className="tt-icon">
-          <use xlinkHref="#icon-ava-k" />
-        </svg>
-      </div>
-      <div className="tt-col-description">
-        <h4 className="tt-title">
-          <a href="#">Kevin</a> <span className="time">10:49 AM</span>
-        </h4>
-        <p>that happens during december, it will be fixed soon..</p>
-      </div>
-    </div>
-  </div>
-  <div className="tt-wrapper-inner">
-    <div className="pt-editor form-default">
-      <div className="pt-row">
-        <div className="col-left">
-          <ul className="pt-edit-btn">
-            <li>
-              <button type="button" className="btn-icon">
-                <svg className="tt-icon">
-                  <use xlinkHref="#icon-quote" />
-                </svg>
-              </button>
-            </li>
-            <li>
-              <button type="button" className="btn-icon">
-                <svg className="tt-icon">
-                  <use xlinkHref="#icon-bold" />
-                </svg>
-              </button>
-            </li>
-            <li>
-              <button type="button" className="btn-icon">
-                <svg className="tt-icon">
-                  <use xlinkHref="#icon-italic" />
-                </svg>
-              </button>
-            </li>
-            <li>
-              <button type="button" className="btn-icon">
-                <svg className="tt-icon">
-                  <use xlinkHref="#icon-share_topic" />
-                </svg>
-              </button>
-            </li>
-            <li>
-              <button type="button" className="btn-icon">
-                <svg className="tt-icon">
-                  <use xlinkHref="#icon-blockquote" />
-                </svg>
-              </button>
-            </li>
-            <li>
-              <button type="button" className="btn-icon">
-                <svg className="tt-icon">
-                  <use xlinkHref="#icon-performatted" />
-                </svg>
-              </button>
-            </li>
-            <li className="hr" />
-            <li>
-              <button type="button" className="btn-icon">
-                <svg className="tt-icon">
-                  <use xlinkHref="#icon-upload_files" />
-                </svg>
-              </button>
-            </li>
-            <li>
-              <button type="button" className="btn-icon">
-                <svg className="tt-icon">
-                  <use xlinkHref="#icon-bullet_list" />
-                </svg>
-              </button>
-            </li>
-            <li>
-              <button type="button" className="btn-icon">
-                <svg className="tt-icon">
-                  <use xlinkHref="#icon-heading" />
-                </svg>
-              </button>
-            </li>
-            <li>
-              <button type="button" className="btn-icon">
-                <svg className="tt-icon">
-                  <use xlinkHref="#icon-horizontal_line" />
-                </svg>
-              </button>
-            </li>
-            <li>
-              <button type="button" className="btn-icon">
-                <svg className="tt-icon">
-                  <use xlinkHref="#icon-emoticon" />
-                </svg>
-              </button>
-            </li>
-            <li>
-              <button type="button" className="btn-icon">
-                <svg className="tt-icon">
-                  <use xlinkHref="#icon-settings" />
-                </svg>
-              </button>
-            </li>
-            <li>
-              <button type="button" className="btn-icon">
-                <svg className="tt-icon">
-                  <use xlinkHref="#icon-color_picker" />
-                </svg>
-              </button>
-            </li>
-          </ul>
+      <div className="tt-wrapper-inner">
+        <div className="pt-editor form-default">
+
+          <div className="form-group">
+            <textarea
+              name="message"
+              className="form-control"
+              rows={5}
+              placeholder="Write your message here"
+              defaultValue={""}
+            />
+          </div>
+          <div className="pt-row">
+            <div className="col-auto ml-auto">
+              <a href="#" className="btn btn-secondary btn-custom">
+                Send
+              </a>
+            </div>
+          </div>
         </div>
       </div>
-      <div className="form-group">
-        <textarea
-          name="message"
-          className="form-control"
-          rows={5}
-          placeholder="Write your message here"
-          defaultValue={""}
-        />
-      </div>
-      <div className="pt-row">
-        <div className="col-auto ml-auto">
-          <a href="#" className="btn btn-secondary btn-custom">
-            Send
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
-</>
- )
+    </>
+  )
 }

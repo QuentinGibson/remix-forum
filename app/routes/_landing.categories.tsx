@@ -1,6 +1,6 @@
-import { Link, useFetcher, useLoaderData } from "@remix-run/react";
+import { useFetcher, useLoaderData } from "@remix-run/react";
 import type { LoaderArgs } from "@remix-run/server-runtime";
-import { BsHeartFill, Bs, BsHeartSearch, BsX } from "react-icons/bs";
+import { BsSearch, BsX } from "react-icons/bs";
 import CategoryItem from "~/components/CategoryItem";
 
 export const loader = async ({ request }: LoaderArgs) => {

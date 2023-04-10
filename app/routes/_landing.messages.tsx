@@ -1,4 +1,5 @@
-import { LoaderArgs, json, Link } from "@remix-run/node";
+import { LoaderArgs, json } from "@remix-run/node";
+import { Link } from '@remix-run/react'
 import { Outlet, useLoaderData } from "@remix-run/react";
 import { BsFilter, BsPencil, BsSearch } from "react-icons/bs";
 import Avatar from "react-avatar";
@@ -6,7 +7,12 @@ import Avatar from "react-avatar";
 export const loader = async ({ request }: LoaderArgs) => {
   const data = [
     {
-      createdBy: new Date("2022-11-24").getTime(),
+      id: '1',
+      createdBy: new Date("2022-11-24").toLocaleDateString("en-US", {
+        month: "2-digit",
+        day: "2-digit",
+        year: "numeric",
+      }),
       recipient: "Taylor",
       message: {
         user: {
@@ -17,7 +23,12 @@ export const loader = async ({ request }: LoaderArgs) => {
       isRead: false,
     },
     {
-      createdBy: new Date("2022-11-28").getTime(),
+      id: '2',
+      createdBy: new Date("2022-11-28").toLocaleDateString("en-US", {
+        month: "2-digit",
+        day: "2-digit",
+        year: "numeric",
+      }),
       recipient: "Greg",
       message: {
         user: {
@@ -29,7 +40,12 @@ export const loader = async ({ request }: LoaderArgs) => {
       isRead: true,
     },
     {
-      createdBy: new Date("2022-11-25").getTime(),
+      id: '3',
+      createdBy: new Date("2022-11-25").toLocaleDateString("en-US", {
+        month: "2-digit",
+        day: "2-digit",
+        year: "numeric",
+      }),
       recipient: "Sasha",
       message: {
         user: {
@@ -40,7 +56,12 @@ export const loader = async ({ request }: LoaderArgs) => {
       isRead: true,
     },
     {
-      createdBy: new Date("2022-11-15").getTime(),
+      id: '4',
+      createdBy: new Date("2022-11-15").toLocaleDateString("en-US", {
+        month: "2-digit",
+        day: "2-digit",
+        year: "numeric",
+      }),
       recipient: "Marshall",
       message: {
         user: {
@@ -51,7 +72,12 @@ export const loader = async ({ request }: LoaderArgs) => {
       isRead: false,
     },
     {
-      createdBy: new Date("2022-12-02").getTime(),
+      id: '5',
+      createdBy: new Date("2022-12-02").toLocaleDateString("en-US", {
+        month: "2-digit",
+        day: "2-digit",
+        year: "numeric",
+      }),
       recipient: "Ciara",
       message: {
         user: {
@@ -62,7 +88,12 @@ export const loader = async ({ request }: LoaderArgs) => {
       isRead: false,
     },
     {
-      createdBy: new Date("2022-11-22").getTime(),
+      id: '6',
+      createdBy: new Date("2022-11-22").toLocaleDateString("en-US", {
+        month: "2-digit",
+        day: "2-digit",
+        year: "numeric",
+      }),
       recipient: "Max",
       message: {
         user: {
@@ -73,7 +104,12 @@ export const loader = async ({ request }: LoaderArgs) => {
       isRead: false,
     },
     {
-      createdBy: new Date("2022-11-18").getTime(),
+      id: '7',
+      createdBy: new Date("2022-11-18").toLocaleDateString("en-US", {
+        month: "2-digit",
+        day: "2-digit",
+        year: "numeric",
+      }),
       recipient: "Lila",
       message: {
         user: {
@@ -84,7 +120,12 @@ export const loader = async ({ request }: LoaderArgs) => {
       isRead: true,
     },
     {
-      createdBy: new Date("2022-11-19").getTime(),
+      id: '8',
+      createdBy: new Date("2022-11-19").toLocaleDateString("en-US", {
+        month: "2-digit",
+        day: "2-digit",
+        year: "numeric",
+      }),
       recipient: "Jordan",
       message: {
         user: {
@@ -95,7 +136,12 @@ export const loader = async ({ request }: LoaderArgs) => {
       isRead: true,
     },
     {
-      createdBy: new Date("2022-11-14").getTime(),
+      id: '9',
+      createdBy: new Date("2022-11-14").toLocaleDateString("en-US", {
+        month: "2-digit",
+        day: "2-digit",
+        year: "numeric",
+      }),
       recipient: "Avery",
       message: {
         user: {
@@ -106,7 +152,12 @@ export const loader = async ({ request }: LoaderArgs) => {
       isRead: false,
     },
     {
-      createdBy: new Date("2022-11-30").getTime(),
+      id: '10',
+      createdBy: new Date("2022-11-30").toLocaleDateString("en-US", {
+        month: "2-digit",
+        day: "2-digit",
+        year: "numeric",
+      }),
       recipient: "Dylan",
       message: {
         user: {
@@ -117,7 +168,12 @@ export const loader = async ({ request }: LoaderArgs) => {
       isRead: false,
     },
     {
-      createdBy: new Date("2022-11-26").getTime(),
+      id: '11',
+      createdBy: new Date("2022-11-26").toLocaleDateString("en-US", {
+        month: "2-digit",
+        day: "2-digit",
+        year: "numeric",
+      }),
       recipient: "Mason",
       message: {
         user: {
@@ -131,19 +187,19 @@ export const loader = async ({ request }: LoaderArgs) => {
   return json({ chat: data });
 };
 
-function ConversationCard({data}: any) {
+function ConversationCard({ data }: any) {
   return (
-    <Link href="#" className="tt-item">
-                    <div className="tt-col-avatar">
-                      <Avatar className="tt-icon" round size="40" value={data.user.name} />
-                    </div>
-                    <div className="tt-col-description">
-                      <h4 className="tt-title">
-                        <span>{data.message.user.name}</span> <span className="time">{data.message.createdBy}</span>
-                      </h4>
-                      <div className="tt-message tt-select">{data.message.user}:{data.message.content}</div>
-                    </div>
-                  </Link>
+    <Link to={`/messages/${data.id}`} className="tt-item">
+      <div className="tt-col-avatar">
+        <Avatar className="tt-icon" round size="40" name={data.message.user.name} maxInitials={1} />
+      </div>
+      <div className="tt-col-description">
+        <h4 className="tt-title">
+          <span>{data.message.user.name}</span> <span className="time">{data.createdBy}</span>
+        </h4>
+        <div className={`tt-message ${data.isRead ? "tt-select" : ""} `}>{data.message.user.name}: {data.message.content}</div>
+      </div>
+    </Link>
   )
 }
 
@@ -155,15 +211,12 @@ export default function MessageRoute() {
         <div className="tt-messages-layout">
           <div className="row no-gutters">
             <div className="col-md-4 tt-aside" id="js-aside">
-              <a href="#" className="tt-title-aside">
+              <p className="tt-title-aside" style={{ display: "flex", flexDirection: "row", justifyContent: "space-around", alignContent: "center" }}>
                 <h2 className="tt-title">Messages</h2>
-                <i className="tt-icon">
-                  <svg className="icon">
-                    <use xlinkHref="#icon-pencil" />
-                  </svg>
-                  <BsPencil />
-                </i>
-              </a>
+                <Link to={"/messages/newmessage"}>
+                  <BsPencil className="icon" />
+                </Link>
+              </p>
               <div className="tt-all-avatar">
                 <div className="tt-box-search">
                   <input
@@ -188,149 +241,7 @@ export default function MessageRoute() {
                   className="tt-list-avatar"
                   style={{ overflow: "initial", overflowX: "scroll" }}
                 >
-                  <a href="#" className="tt-item">
-                    <div className="tt-col-avatar">
-                      <svg className="tt-icon">
-                        <use xlinkHref="#icon-ava-t" />
-                      </svg>
-                    </div>
-                    <div className="tt-col-description">
-                      <h4 className="tt-title">
-                        <span>Taylor</span> <span className="time">Feb 03</span>
-                      </h4>
-                      <div className="tt-message tt-select">
-                        Taylor: need to see that
-                      </div>
-                    </div>
-                  </a>
-                  <a href="#" className="tt-item">
-                    <div className="tt-col-avatar">
-                      <svg className="tt-icon">
-                        <use xlinkHref="#icon-ava-g" />
-                      </svg>
-                    </div>
-                    <div className="tt-col-description">
-                      <h4 className="tt-title">
-                        <span>Green</span> <span className="time">Feb 02</span>
-                      </h4>
-                      <div className="tt-message tt-select">
-                        You: Alright ttyl
-                      </div>
-                    </div>
-                  </a>
-                  <a href="#" className="tt-item">
-                    <div className="tt-col-avatar">
-                      <svg className="tt-icon">
-                        <use xlinkHref="#icon-ava-k" />
-                      </svg>
-                    </div>
-                    <div className="tt-col-description">
-                      <h4 className="tt-title">
-                        <span>Kevin</span> <span className="time">Jan 27</span>
-                      </h4>
-                      <div className="tt-message">
-                        You: Business is good, but going a bit..
-                      </div>
-                    </div>
-                  </a>
-                  <a href="#" className="tt-item">
-                    <div className="tt-col-avatar">
-                      <svg className="tt-icon">
-                        <use xlinkHref="#icon-ava-d" />
-                      </svg>
-                    </div>
-                    <div className="tt-col-description">
-                      <h4 className="tt-title">
-                        <span>Dylan</span> <span className="time">Jan 24</span>
-                      </h4>
-                      <div className="tt-message">Dylan: modding fo skyrim</div>
-                    </div>
-                  </a>
-                  <a href="#" className="tt-item">
-                    <div className="tt-col-avatar">
-                      <svg className="tt-icon">
-                        <use xlinkHref="#icon-ava-p" />
-                      </svg>
-                    </div>
-                    <div className="tt-col-description">
-                      <h4 className="tt-title">
-                        <span>Peterson</span>{" "}
-                        <span className="time">Jan 21</span>
-                      </h4>
-                      <div className="tt-message">You: Sent you that email</div>
-                    </div>
-                  </a>
-                  <a href="#" className="tt-item">
-                    <div className="tt-col-avatar">
-                      <svg className="tt-icon">
-                        <use xlinkHref="#icon-ava-s" />
-                      </svg>
-                    </div>
-                    <div className="tt-col-description">
-                      <h4 className="tt-title">
-                        <span>Smith</span> <span className="time">Jan 20</span>
-                      </h4>
-                      <div className="tt-message">
-                        You: Let me know about that
-                      </div>
-                    </div>
-                  </a>
-                  <a href="#" className="tt-item">
-                    <div className="tt-col-avatar">
-                      <svg className="tt-icon">
-                        <use xlinkHref="#icon-ava-u" />
-                      </svg>
-                    </div>
-                    <div className="tt-col-description">
-                      <h4 className="tt-title">
-                        <span>Usain</span> <span className="time">Jan 18</span>
-                      </h4>
-                      <div className="tt-message">
-                        Usain: Will be online after 2pm
-                      </div>
-                    </div>
-                  </a>
-                  <a href="#" className="tt-item">
-                    <div className="tt-col-avatar">
-                      <svg className="tt-icon">
-                        <use xlinkHref="#icon-ava-l" />
-                      </svg>
-                    </div>
-                    <div className="tt-col-description">
-                      <h4 className="tt-title">
-                        <span>Larry</span> <span className="time">Jan 16</span>
-                      </h4>
-                      <div className="tt-message">Larry: :D</div>
-                    </div>
-                  </a>
-                  <a href="#" className="tt-item">
-                    <div className="tt-col-avatar">
-                      <svg className="tt-icon">
-                        <use xlinkHref="#icon-ava-j" />
-                      </svg>
-                    </div>
-                    <div className="tt-col-description">
-                      <h4 className="tt-title">
-                        <span>Jordan</span> <span className="time">Jan 16</span>
-                      </h4>
-                      <div className="tt-message">You: Lets catch up later</div>
-                    </div>
-                  </a>
-                  <a href="#" className="tt-item">
-                    <div className="tt-col-avatar">
-                      <svg className="tt-icon">
-                        <use xlinkHref="#icon-ava-c" />
-                      </svg>
-                    </div>
-                    <div className="tt-col-description">
-                      <h4 className="tt-title">
-                        <span>Clive</span> <span className="time">Jan 12</span>
-                      </h4>
-                      <div className="tt-message">
-                        Clive: Happy New Yero brother :)
-                      </div>
-                    </div>
-                  </a>
+                  {chat.map(conversation => (<ConversationCard key={conversation.id} data={conversation} />))}
                 </div>
               </div>
             </div>
