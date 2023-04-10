@@ -1,3 +1,14 @@
+import { LoaderArgs, json } from "@remix-run/server-runtime";
+
+export const loader = async ({ request, params }: LoaderArgs) => {
+  const data = [
+    {
+      title: "We Want to Hear From You! What Would You Like?",
+    }
+  ]
+  return json({ activities: data })
+};
+
 export default function UserActivityComponent() {
   return (
     <div className="tab-content">

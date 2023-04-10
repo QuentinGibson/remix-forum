@@ -2,6 +2,7 @@ import { useLoaderData } from "@remix-run/react";
 import { LoaderArgs, json } from "@remix-run/server-runtime";
 import { useState } from "react";
 import Avatar from "react-avatar";
+import { BsX } from "react-icons/bs";
 
 interface User {
   id: number;
@@ -36,6 +37,56 @@ export const loader = async ({ request, params }: LoaderArgs) => {
       name: "Smith",
       username: "@smith45",
     },
+    {
+      id: 6,
+      name: "Morgan",
+      username: "@morgan56",
+    },
+    {
+      id: 7,
+      name: "Jordan",
+      username: "@jordan12",
+    },
+    {
+      id: 8,
+      name: "Alex",
+      username: "@alex34",
+    },
+    {
+      id: 9,
+      name: "Riley",
+      username: "@riley76",
+    },
+    {
+      id: 10,
+      name: "Casey",
+      username: "@casey11",
+    },
+    {
+      id: 11,
+      name: "Jesse",
+      username: "@jesse52",
+    },
+    {
+      id: 12,
+      name: "Pat",
+      username: "@pat19",
+    },
+    {
+      id: 13,
+      name: "Jamie",
+      username: "@jamie23",
+    },
+    {
+      id: 14,
+      name: "Cameron",
+      username: "@cameron65",
+    },
+    {
+      id: 15,
+      name: "Sam",
+      username: "@sam90",
+    },
   ];
 
   return json({ friendList: data })
@@ -52,15 +103,21 @@ export default function NewMessageRoute() {
   const [friends, setFriends] = useState<User[]>([]);
   function handleFriendSearch(e: React.ChangeEvent<HTMLInputElement>) {
     const { value } = e.target;
-    setVisibleFriends(friendList.filter((friend) => {
+    const searchedFriends = friendList.filter((friend) => {
       return friend.name.toLowerCase().includes(value.toLowerCase());
-    }))
+    })
+    setVisibleFriends(searchedFriends)
   }
   function handleFriendClick(_e: any, friendId: number) {
     const friend = friendList.find((friend) => friend.id === friendId);
     if (friend) {
       setFriends([...friends, friend]);
+      setVisibleFriends(visibleFriends.filter((friend) => friend.id !== friendId));
     }
+  }
+  function handleFriendRemove(friendId: number) {
+    setFriends(prevState => prevState.filter((friend) => friend.id !== friendId));
+    setVisibleFriends(prevState => [...prevState, friendList.find((friend) => friend.id === friendId) as User]);
   }
   return (
     <>
@@ -68,15 +125,16 @@ export default function NewMessageRoute() {
         <h2 className="tt-title">New message</h2>
       </div>
       <div className="tt-search-compose">
-        <div>
-          {friends.map((friend) => (
-            <div className="tt-item">
-              <Avatar name={friend.name} size="30" round={true} />
-              <span className="tt-name">{friend.name}</span>
-            </div>
-          ))}
-        </div>
-        <div className="tt-input">
+        <div className="tt-input flex items-center">
+          <div className="flex">
+            {friends.map((friend) => (
+              <div className="tt-item flex mx-2 items-center">
+                <Avatar className="mr-2" name={friend.name} size="30" round={true} />
+                <span className="tt-name">{friend.name}</span>
+                <BsX onClick={() => handleFriendRemove(friend.id)} className="h-full font-bold" />
+              </div>
+            ))}
+          </div>
           <input
             type="text"
             className="tt-search-input"
@@ -85,8 +143,7 @@ export default function NewMessageRoute() {
           />
         </div>
         <div
-          className="tt-search-results ps-container ps-theme-default ps-active-y"
-          data-ps-id="fddd637f-fee1-46e3-9942-25514b97d18b"
+          className="flex flex-col items-start h-80 overflow-y-scroll"
         >
           {visibleFriends.map((friend) => (
             <Friend friend={friend} handleFriendClick={handleFriendClick} />
@@ -118,9 +175,9 @@ export default function NewMessageRoute() {
 }
 function Friend({ friend, handleFriendClick }: { friend: User, handleFriendClick: (e: any, friendId: number) => void }) {
   return (
-    <button onClick={(e) => handleFriendClick(e, friend.id)} className="tt-item">
+    <button key={friend.id} onClick={(e) => handleFriendClick(e, friend.id)} className="flex mx-4 my-3">
       <div className="tt-col-avatar">
-        <Avatar className="tt-icon" name={friend.name} size="40" round={true} maxInitials={1} />
+        <Avatar className="tt-icon mr-2" name={friend.name} size="40" round={true} maxInitials={1} />
       </div>
       <div className="tt-col-description">
         <h4 className="tt-title">
